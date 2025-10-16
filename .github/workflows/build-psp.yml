@@ -1,30 +1,5 @@
-name: build-psp
-
-on:
-  workflow_dispatch:
-  push:
-    paths:
-      - "**/*.c"
-      - "**/*.h"
-      - "Makefile"
-      - ".github/workflows/build-psp.yml"
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    container: pspdev/pspdev:latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build (PSP)
-        run: |
-          make clean || true
-          make -j"$(nproc)"
-          ls -l || true
-      - name: Upload EBOOT
-        uses: actions/upload-artifact@v4
-        with:
-          name: EBOOT
-          path: |
-            EBOOT.PBP
-            **/EBOOT.PBP
-          if-no-files-found: warn
+- name: Build (PSP)
+  run: |
+    make -f Makefile.psp clean || true
+    make -f Makefile.psp -j"$(nproc)"
+    ls -l || true
