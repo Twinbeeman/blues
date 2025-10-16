@@ -1,0 +1,24 @@
+# PSP build for cyxx/blues
+TARGET = BLUES
+PSPSDK  := $(shell psp-config --pspsdk-path)
+PSPDEV  := $(shell psp-config --pspdev-path)
+
+# Objects from root
+OBJS := main.o mixer.o util.o sys_psp.o
+
+# Objects from subdirs (auto-detected)
+OBJS += $(patsubst %.c, %.o, $(wildcard bb/*.c))
+OBJS += $(patsubst %.c, %.o, $(wildcard ja/*.c))
+OBJS += $(patsubst %.c, %.o, $(wildcard p2/*.c))
+
+CFLAGS += -O2 -G0 -std=c99 -fno-common -ffast-math -fomit-frame-pointer -fno-strict-aliasing -Wall -Wextra
+CFLAGS += -I.
+
+# PSP EBOOT config (optional icon if present in repo)
+EXTRA_TARGETS = EBOOT.PBP
+PSP_EBOOT_TITLE = Blues
+# PSP_EBOOT_ICON = bbja1.png
+
+LIBS += -lpspgu -lpspgum -lpspdisplay -lpspge -lpspdebug -lpspctrl -lpspaudio -lpsppower -lm
+
+include $(PSPSDK)/lib/build.mak
